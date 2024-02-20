@@ -346,9 +346,11 @@ function triggerEveryThing() {
           viewAlohaaBtn.innerText = "View Alohaa Records";
           toFind.className =
             "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-        } else viewAlohaaBtn.innerText = "Hide Alohaa Records";
-        toFind.className =
-          "hidden overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
+        } else {
+          viewAlohaaBtn.innerText = "Hide Alohaa Records";
+          toFind.className =
+            "hidden overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
+        }
       } else {
         const insertBeforeElement = document.querySelector(
           "#call-reporting-dashboard > div > div > div.w-vw.z-10.sticky.top-0.py-2\\.5.-mx-8.-mt-4.bg-gray-50"
@@ -370,6 +372,7 @@ function triggerEveryThing() {
           ></iframe>`;
         callReportingModal.className =
           "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
+        viewAlohaaBtn.innerText = "Hide Alohaa Records";
         parentElement.insertBefore(callReportingModal, insertBeforeElement);
       }
     });
