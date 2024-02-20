@@ -103,7 +103,7 @@ function triggerEveryThing() {
       if (backBtn) {
         backBtn.addEventListener("click", () => {
           // manageConversationBtnClick();
-        //   insertAllohaCallBtn();
+          //   insertAllohaCallBtn();
           triggerEveryThing();
         });
         clearInterval(targetBackBtnTimer);
@@ -343,11 +343,11 @@ function triggerEveryThing() {
       const toFind = document.getElementById("default-modal");
       if (toFind) {
         if (Array.from(toFind.classList).includes("hidden")) {
-          viewAlohaaBtn.innerText = "View Alohaa Records";
+          viewAlohaaBtn.innerText = "Hide Alohaa Records";
           toFind.className =
             "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
         } else {
-          viewAlohaaBtn.innerText = "Hide Alohaa Records";
+          viewAlohaaBtn.innerText = "View Alohaa Records";
           toFind.className =
             "hidden overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
         }
