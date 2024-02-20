@@ -364,7 +364,7 @@ function triggerEveryThing() {
         callReportingModal.setAttribute("tabindex", "-1");
         callReportingModal.setAttribute("aria-hidden", "true");
         callReportingModal.innerHTML = `<iframe
-            src="http://localhost:3000/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
+            src="https://integration-cfx/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
             class="w-full h-screen"
           ></iframe>`;
         callReportingModal.className =
