@@ -382,6 +382,8 @@ function triggerEveryThing() {
       const insertDestination = document.querySelector(
         "#call-reporting-dashboard > div > div > div.hl-header > div > div:nth-child(2)"
       );
+      const viewAlohaaBtn = document.getElementById("view-alohaa-btn");
+
       console.log("insertDestination", insertDestination);
       if (insertDestination) {
         const viewAlohaaRecordsBtns = document.createElement("button");
@@ -397,8 +399,10 @@ function triggerEveryThing() {
         );
         viewAlohaaRecordsBtns.innerText = "View Alohaa Records";
         viewAlohaaRecordsBtns.id = "view-alohaa-btn";
-        insertDestination.appendChild(viewAlohaaRecordsBtns);
-        viewAlohaaRecordsBtnsEventHandler();
+        if (!viewAlohaaBtn) {
+          insertDestination.appendChild(viewAlohaaRecordsBtns);
+          viewAlohaaRecordsBtnsEventHandler();
+        }
         console.log("callreporting", insertDestination);
         clearInterval(attachBtnToCallReportingTabTimer);
       }
