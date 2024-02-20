@@ -368,7 +368,7 @@ function triggerEveryThing() {
         callReportingModal.setAttribute("aria-hidden", "true");
         callReportingModal.innerHTML = `<iframe
             src="https://integration-cfx.netlify.app/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
-            class="w-full h-screen"
+            class="w-full h-screen mb-6"
           ></iframe>`;
         callReportingModal.className =
           "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
