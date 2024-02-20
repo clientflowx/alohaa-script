@@ -103,7 +103,8 @@ function triggerEveryThing() {
       if (backBtn) {
         backBtn.addEventListener("click", () => {
           // manageConversationBtnClick();
-          insertAllohaCallBtn();
+        //   insertAllohaCallBtn();
+          triggerEveryThing();
         });
         clearInterval(targetBackBtnTimer);
       }
