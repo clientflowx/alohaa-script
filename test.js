@@ -165,10 +165,14 @@ function triggerEveryThing() {
                 "hl_settings--body hl_v2_stettings--body hl_without-topbar"
             );
             const inner = outer[0].getElementsByTagName("div")[1];
-            if (inner) {
+            const isManageAlohaaTabAlreadyInsered = document.getElementById("manage-alohaa-tab")
+            if (inner && !isManageAlohaaTabAlreadyInsered) {
                 console.log("here");
-               // https://integration-cfx.netlify.app/highlevel/alohaa?
-                inner.innerHTML += `<div class="col-12"><iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:350px;" /></div>`;
+                const manageAlohaaTab = document.createElement("div");
+                manageAlohaaTab.classList.add('col-12');
+                manageAlohaaTab.id = 'manage-alohaa-tab'
+                manageAlohaaTab.innerHTML = `<iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:350px;" />`
+                inner.appendChild(manageAlohaaTab);
                 allohaManageComponentInserted = true;
                 // clearInterval(insertManageAllohaTabTimer);
             }
@@ -488,8 +492,8 @@ function triggerEveryThing() {
             return;
         }
         const formattedReceiverNumber = mobileNumberOfReceiver
-        .replace(/^(\+91\s*)/g, "")
-        .replace(/\s/g, "");
+            .replace(/^(\+91\s*)/g, "")
+            .replace(/\s/g, "");
         const payload = {
             // didNumber: '918069738302',
             // callerNumber: '8882375101',
