@@ -208,52 +208,40 @@ function triggerEveryThing() {
         }
     };
 
-    // To handle case for page reload
-    var callAllohaPageDesiredUrlPattern =
-        /https:\/\/app\.clientflowx\.com\/v2\/location\/[A-Za-z0-9]+\/conversations\/conversations\/[A-Za-z0-9]+/;
 
-    // Check if the current URL matches the desired URL pattern
-    if (callAllohaPageDesiredUrlPattern.test(window.location.href)) {
-        // Your code to run when the URLs match
-        console.log("URL matches the pattern for call");
-        insertAllohaCallBtn();
+    // Insert Alohaa Call Btn Section ================================================================================================================
+    // ===============================================================================================================================================
+    const addEventListenerToConversationItemsClick = () => {
+        const timerId = setInterval(() => {
+            const conversationList = document.querySelector("#conversation-list")
+            if (conversationList) {
+                conversationList.addEventListener("click", () => {
+                    insertAllohaCallBtn();
+                })
+                clearInterval(timerId)
+            }
+        }, 1000)
     }
 
-    const manageConversationBtnClick = () => {
-        const converseTimerId = setInterval(() => {
-            // Add event listener after each 5 seconds
-            const msgBtn = document.getElementById("sb_conversations");
 
-            if (msgBtn) {
-                console.log("msgbtn", msgBtn);
-                msgBtn.addEventListener("click", () => {
-                    console.log(
-                        "window.locationUserId",
-                        window.locationUserId,
-                        window.location.href
-                    );
-                    // if (window.locationUserId === "FQ2QW4FaaR2EA12eaHnC") {
-                    console.log("found inside msg====");
-                    // if (!isAllocaBtnInserted) {
+    const addEventListenerToConversationSectionTopBar = () => {
+        const timerId = setInterval(() => {
+            const conversationNavItem = document.querySelector("#conversations > div > div.hl_conversations--messages-list-v2.relative.border-r.border-gray-200 > div > div:nth-child(1) > div > nav")
+            if (conversationNavItem) {
+                conversationNavItem.addEventListener("click", () => {
                     insertAllohaCallBtn();
-                    // attach listener on chat list item to get email
-                    // attachListenerToListItemClick();
-                    // }
-                    // }
-                });
-                clearInterval(converseTimerId);
+                })
+                clearInterval(timerId)
             }
-        }, 5000);
-    };
+        }, 1000)
+    }
 
-    // call fn to add event listener on conversation btn
-    manageConversationBtnClick();
 
     function addEventListenerToAllohaCallBtn() {
         const allohaCallBtn = document.querySelector(".alloha-call-btn");
         allohaCallBtn.addEventListener("click", async () => {
             if (!findMobileNumberOfCurrentUser()) {
-                return;
+                return null;
             }
             const payload = {
                 // didNumber: '918069738302',
@@ -293,12 +281,12 @@ function triggerEveryThing() {
     function insertAllohaCallBtn() {
         // Find the existing div with class 'message-header-actions' every 5 seconds
         const timeId = setInterval(() => {
-            const existingDiv = document.querySelector(".message-header-actions");
+            const existingDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\]")
             console.log("div===", existingDiv);
 
             if (existingDiv) {
                 // Find the child div with class 'button-group'
-                const buttonGroupDiv = existingDiv.querySelector(".button-group");
+                const buttonGroupDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\] > div")
                 // check if alohaa call btn is already inserted
                 const isAlohaaCallBtnAlreadyInserted = document.getElementById("alohaa-make-call-btn");
                 if (buttonGroupDiv) {
@@ -309,13 +297,18 @@ function triggerEveryThing() {
                         // Use clearInterval instead of clearTimeout
                         return;
                     }
+                    // hide twillio btn in profile tab
+                    const twilllioBtnToHide = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\] > div > div:nth-child(1)")
+                    if (twilllioBtnToHide) {
+                        twilllioBtnToHide.style.display = "none";
+                    }
                     // Get the second button in the button group
-                    const secondButton = document.querySelector(
-                        ".button-group button:nth-child(1)"
-                    );
-                    console.log("second btn====", secondButton);
-                    // Remove the rounded-l-md class
-                    secondButton.classList.remove("rounded-l-md");
+                    // const secondButton = document.querySelector(
+                    //     ".button-group button:nth-child(1)"
+                    // );
+                    // console.log("second btn====", secondButton);
+                    // // Remove the rounded-l-md class
+                    // secondButton.classList.remove("rounded-l-md");
 
                     // Create a new button
                     const newButton = document.createElement("button");
@@ -324,20 +317,21 @@ function triggerEveryThing() {
                     newButton.classList.add(
                         "alloha-call-btn",
                         "flex",
-                        "inline-flex",
                         "items-center",
-                        "px-2.5",
-                        "py-1",
-                        "border",
-                        "border-gray-300",
-                        "rounded-l-md"
+                        "h-[24px]",
+                        "new-crp--contacts--transition",
+                        "justify-center",
+                        "w-[26px]",
+                        "rounded-full",
+                        "bg-gray-200",
+                        "cursor-pointer"
                     );
-                    newButton.style.paddingLeft = "15px";
+                    // newButton.style.paddingLeft = "15px";
                     // newButton.style.background = "gray";
 
                     // Set button content
                     newButton.innerHTML =
-                        '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:20px;"/></span>'; // You can customize the text
+                        '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" class="h-[14px] w-[14px] new-crp--contacts--transition" /></span>'; // You can customize the text
 
                     // Insert the new button as the first child inside the 'button-group' div
                     buttonGroupDiv.insertBefore(newButton, buttonGroupDiv.firstChild);
@@ -345,8 +339,53 @@ function triggerEveryThing() {
                     addEventListenerToAllohaCallBtn();
                 }
             }
-        }, 5000);
+        }, 500);
     }
+
+
+    const manageConversationBtnClick = () => {
+        const converseTimerId = setInterval(() => {
+            // Add event listener after each 5 seconds
+            const msgBtn = document.getElementById("sb_conversations");
+
+            if (msgBtn) {
+                console.log("msgbtn", msgBtn);
+                msgBtn.addEventListener("click", () => {
+                    console.log(
+                        "window.locationUserId",
+                        window.locationUserId,
+                        window.location.href
+                    );
+                    console.log("found inside msg====");
+                    insertAllohaCallBtn();
+
+                    // attach listener on chat list item to get email
+                    addEventListenerToConversationItemsClick()
+                    addEventListenerToConversationSectionTopBar()
+
+                });
+                clearInterval(converseTimerId);
+            }
+        }, 5000);
+    };
+
+    // call fn to add event listener on conversation btn
+    manageConversationBtnClick();
+
+
+    // To handle case for page reload
+    var callAllohaPageDesiredUrlPattern =
+        /https:\/\/app\.clientflowx\.com\/v2\/location\/[A-Za-z0-9]+\/conversations\/conversations\/[A-Za-z0-9]+/;
+
+    // Check if the current URL matches the desired URL pattern
+    if (callAllohaPageDesiredUrlPattern.test(window.location.href)) {
+        // Your code to run when the URLs match
+        console.log("URL matches the pattern for call");
+        insertAllohaCallBtn();
+        addEventListenerToConversationItemsClick()
+        addEventListenerToConversationSectionTopBar()
+    }
+
 
     // phase 2 changes start =====================================
     const viewAlohaaRecordsBtnsEventHandler = () => {
@@ -446,43 +485,6 @@ function triggerEveryThing() {
     };
     attachEventListenerToReportingBtn();
 
-    // const attachEventListenerToCallInfoAllohaBtn = () => {
-    //     const attachEventListenerToCallInfoAllohaBtnTimerId = setInterval(() => {
-    //         const callInfoDetailBtn = document.querySelector(".callInfoAllohaBtn")
-    //         const callReportingDashboard = document.querySelector("#call-reporting-dashboard")
-    //         if (callInfoDetailBtn && callReportingDashboard) {
-    //             console.log("callinfodetail", callInfoDetailBtn);
-    //             callInfoDetailBtn.addEventListener("click", () => {
-    //                 console.log("callReporting", callReportingDashboard);
-    //                 callReportingDashboard.innerHTML = `<iframe src="http://localhost:3000/highlevel/alloha/call-info?locationId=${window.locationUserId}" style="width:80vw;height:78vh"></iframe>`
-    //             })
-    //         }
-    //         clearInterval(attachEventListenerToCallInfoAllohaBtnTimerId)
-    //     }, 100)
-    // }
-
-    // insert call info tab for alloha
-    // const insertCallInfoTabForAlloha = () => {
-    //     const insertCallInfoTabForAllohaTimerId = setInterval(() => {
-    //         const topBar = document.querySelector("#app > div:nth-child(1) > div.flex.v2-open.sidebar-v2-location.FQ2QW4FaaR2EA12eaHnC.flex.v2-open.sidebar-v2-location > div:nth-child(2) > header > div.flex.flex-row.justify-start.items-center.topmenu-nav")
-    //         if (topBar) {
-    //             console.log("topbarfound", topBar)
-    //             const customBtn = `<button class="callInfoAllohaBtn group text-left mx-1 pb-2 md:pb-3 text-sm font-medium
-    //             topmenu-navitem cursor-pointer relative px-2">Alloha Call Details</button>`;
-
-    //             // Create a temporary div element
-    //             const tempDiv = document.createElement('div');
-    //             tempDiv.innerHTML = customBtn;
-
-    //             // Append the first child of the temporary div (the button) to the topBar
-    //             topBar.appendChild(tempDiv.firstChild);
-
-    //             attachEventListenerToCallInfoAllohaBtn();
-    //             clearInterval(insertCallInfoTabForAllohaTimerId);
-    //         }
-    //     }, 100)
-    // }
-
 
     // oppurtunities section
 
@@ -549,6 +551,7 @@ function triggerEveryThing() {
     const addBtnToMakeCallThroughAlohaa = () => {
         const addBtnToMakeCallThroughAlohaaTimerId = setInterval(() => {
             const opportunitiesCardMobileNumberField = document.querySelector("#opportunitiesForm > div:nth-child(2) > div > div.n-form-item-blank");
+            const isAlohaaCallBtnAlreadyInserted = document.getElementById("alohaa-make-call-opportunities-btn")
             if (opportunitiesCardMobileNumberField) {
                 const newButton = document.createElement("button");
                 newButton.id = "alohaa-make-call-opportunities-btn"
