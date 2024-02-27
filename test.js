@@ -4,7 +4,7 @@ console.log("script to inject alohaa logic initiated");
 let isAllocaBtnInserted = false;
 let handleConversationItemClickTimerId = "";
 let allohaManageComponentInserted = false;
-const backendEndPointUrl = "https://test1-production-00cc.up.railway.app";
+const backendEndPointUrl = "https://cfx-mono-production.up.railway.app";
 // const backendEndPointUrl = "http://localhost:8001";
 
 const checkForValidUserFromCache = () => {
@@ -271,6 +271,9 @@ function triggerEveryThing() {
                 const data = await response.json();
                 // handle the data from the successful response
                 console.log("calldata", data);
+                if (data?.success)
+                    window.alert("Call Connected...")
+                else window.alert("Some Error Occurred")
             } catch (error) {
                 // handle any errors during the request
                 console.error("Error:", error.message);
@@ -293,7 +296,6 @@ function triggerEveryThing() {
                     // if alohaa already inserted
                     clearInterval(timeId);
                     if (isAlohaaCallBtnAlreadyInserted) {
-                        addEventListenerToAllohaCallBtn();
                         // Use clearInterval instead of clearTimeout
                         return;
                     }
@@ -339,7 +341,7 @@ function triggerEveryThing() {
                     addEventListenerToAllohaCallBtn();
                 }
             }
-        }, 500);
+        }, 200);
     }
 
 
@@ -382,83 +384,12 @@ function triggerEveryThing() {
         // Your code to run when the URLs match
         console.log("URL matches the pattern for call");
         insertAllohaCallBtn();
-        addEventListenerToConversationItemsClick()
-        addEventListenerToConversationSectionTopBar()
+        addEventListenerToConversationItemsClick();
+        addEventListenerToConversationSectionTopBar();
     }
 
 
     // phase 2 changes start =====================================
-    // const viewAlohaaRecordsBtnsEventHandler = () => {
-    //     const viewAlohaaBtn = document.getElementById("view-alohaa-btn");
-    //     viewAlohaaBtn.addEventListener("click", () => {
-    //         const toFind = document.getElementById("default-modal");
-    //         if (toFind) {
-    //             if (Array.from(toFind.classList).includes("hidden")) {
-    //                 viewAlohaaBtn.innerText = "Hide Alohaa Records";
-    //                 toFind.className =
-    //                     "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-    //             } else {
-    //                 viewAlohaaBtn.innerText = "View Alohaa Records";
-    //                 toFind.className =
-    //                     "hidden overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-    //             }
-    //         } else {
-    //             const insertBeforeElement = document.querySelector(
-    //                 "#call-reporting-dashboard > div > div > div.w-vw.z-10.sticky.top-0.py-2\\.5.-mx-8.-mt-4.bg-gray-50"
-    //             );
-    //             const parentElement = document.querySelector(
-    //                 "#call-reporting-dashboard > div > div"
-    //             );
-
-    //             const callReportingModal = document.createElement("div");
-
-    //             callReportingModal.className =
-    //                 "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-    //             callReportingModal.setAttribute("id", "default-modal");
-    //             callReportingModal.setAttribute("tabindex", "-1");
-    //             callReportingModal.setAttribute("aria-hidden", "true");
-        //         callReportingModal.innerHTML = `<iframe
-        //     src="https://integration-cfx.netlify.app/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
-        //     class="w-full h-screen mb-6"
-        //   ></iframe>`;
-    //             callReportingModal.className =
-    //                 "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-    //             viewAlohaaBtn.innerText = "Hide Alohaa Records";
-    //             parentElement.insertBefore(callReportingModal, insertBeforeElement);
-    //         }
-    //     });
-    // };
-    // const attachBtnToCallReportingTab = () => {
-    //     const attachBtnToCallReportingTabTimer = setInterval(() => {
-    //         const insertDestination = document.querySelector(
-    //             "#call-reporting-dashboard > div > div > div.hl-header > div > div:nth-child(2)"
-    //         );
-    //         const viewAlohaaBtn = document.getElementById("view-alohaa-btn");
-
-    //         console.log("insertDestination", insertDestination);
-    //         if (insertDestination) {
-    //             const viewAlohaaRecordsBtns = document.createElement("button");
-    //             viewAlohaaRecordsBtns.className =
-    //                 "border-2 border-black/50 hover:bg-[#6C47FF] hover:bg-blue-700 hover:border-white hover:text-white md:py-2 px-3 py-2 rounded-lg text-black";
-    //             viewAlohaaRecordsBtns.setAttribute(
-    //                 "data-modal-target",
-    //                 "default-modal"
-    //             );
-    //             viewAlohaaRecordsBtns.setAttribute(
-    //                 "data-modal-toggle",
-    //                 "default-modal"
-    //             );
-    //             viewAlohaaRecordsBtns.innerText = "View Alohaa Records";
-    //             viewAlohaaRecordsBtns.id = "view-alohaa-btn";
-    //             if (!viewAlohaaBtn) {
-    //                 insertDestination.appendChild(viewAlohaaRecordsBtns);
-    //                 viewAlohaaRecordsBtnsEventHandler();
-    //             }
-    //             console.log("callreporting", insertDestination);
-    //             clearInterval(attachBtnToCallReportingTabTimer);
-    //         }
-    //     }, 100);
-    // };
 
     const insertCallReportingTabForAlloha = () => {
         const insertCallInfoBtnForAllohaTimerId = setInterval(() => {
@@ -541,6 +472,7 @@ function triggerEveryThing() {
 
             const data = await response.json();
             // handle the data from the successful response
+            window.alert("Call Connected...")
             console.log("calldata", data);
         } catch (error) {
             // handle any errors during the request
@@ -571,6 +503,10 @@ function triggerEveryThing() {
             const opportunitiesCardMobileNumberField = document.querySelector("#opportunitiesForm > div:nth-child(2) > div > div.n-form-item-blank");
             const isAlohaaCallBtnAlreadyInserted = document.getElementById("alohaa-make-call-opportunities-btn")
             if (opportunitiesCardMobileNumberField) {
+                if (isAlohaaCallBtnAlreadyInserted) {
+                    clearInterval(addBtnToMakeCallThroughAlohaaTimerId);
+                    return;
+                }
                 const newButton = document.createElement("button");
                 newButton.id = "alohaa-make-call-opportunities-btn"
                 newButton.setAttribute("type", "button");
@@ -648,4 +584,15 @@ function triggerEveryThing() {
         console.log("Page URL changed:", window.location.href);
         // Your code to handle URL change
     });
+
+
+    const regularCallingFn = () => {
+        setInterval(() => {
+            const alohaaBtn = document.getElementById('alohaa-make-call-btn');
+            if (!alohaaBtn) insertAllohaCallBtn();
+            addBtnToMakeCallThroughAlohaa()
+        }, 200)
+    }
+
+    regularCallingFn();
 }
