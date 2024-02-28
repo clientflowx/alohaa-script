@@ -507,6 +507,8 @@ function triggerEveryThing() {
                     clearInterval(addBtnToMakeCallThroughAlohaaTimerId);
                     return;
                 }
+                opportunitiesCardMobileNumberField.classList.remove('n-form-item-blank')
+                opportunitiesCardMobileNumberField.classList.add('flex','items-center')
                 const newButton = document.createElement("button");
                 newButton.id = "alohaa-make-call-opportunities-btn"
                 newButton.setAttribute("type", "button");
@@ -522,7 +524,7 @@ function triggerEveryThing() {
 
                 // Set button content
                 newButton.innerHTML =
-                    '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:30px;"/></span>'; // You can customize the text
+                    '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:25px;"/></span>'; // You can customize the text
                 opportunitiesCardMobileNumberField.appendChild(newButton);
                 attachEventListenerToMakeCallBtnInOpportunitiesCard();
                 clearInterval(addBtnToMakeCallThroughAlohaaTimerId);
