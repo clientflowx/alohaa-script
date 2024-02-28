@@ -171,7 +171,7 @@ function triggerEveryThing() {
                 const manageAlohaaTab = document.createElement("div");
                 manageAlohaaTab.classList.add('col-12');
                 manageAlohaaTab.id = 'manage-alohaa-tab'
-                manageAlohaaTab.innerHTML = `<iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:350px;" />`
+                manageAlohaaTab.innerHTML = `<iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:450px;" />`
                 inner.appendChild(manageAlohaaTab);
                 allohaManageComponentInserted = true;
                 // clearInterval(insertManageAllohaTabTimer);
