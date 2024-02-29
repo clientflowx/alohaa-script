@@ -8,7 +8,7 @@ const backendEndPointUrl = "https://cfx-mono-production.up.railway.app";
 // const backendEndPointUrl = "http://localhost:8001";
 
 const checkForValidUserFromCache = () => {
-    console.log("Fetching Alloha list from cache");
+    console.log("Fetching Alloha list from cache",window.allohaList.includes(window.locationUserId));
     return window.allohaList.includes(window.locationUserId);
 };
 
@@ -70,7 +70,7 @@ setTimeout(async () => {
     } else {
         console.log("No access, sitting silent");
     }
-}, 1000);
+}, 2000);
 
 // find email of current user
 // add listener on settings btn -> add listener on integration btn
@@ -285,8 +285,6 @@ function triggerEveryThing() {
         // Find the existing div with class 'message-header-actions' every 5 seconds
         const timeId = setInterval(() => {
             const existingDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\]")
-            console.log("div===", existingDiv);
-
             if (existingDiv) {
                 // Find the child div with class 'button-group'
                 const buttonGroupDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\] > div")
@@ -536,10 +534,8 @@ function triggerEveryThing() {
     const attachEventListenerToOpportunitiesCards = () => {
         const attachEventListenerToOpportunitiesCardsTimerId = setInterval(() => {
             const opportunitiesCard = document.getElementsByClassName("opportunitiesCard borderColor mb-2 hl-card")
-            console.log("opportunites cards", opportunitiesCard)
             if (opportunitiesCard.length > 0) {
                 for (let i = 0; i < opportunitiesCard.length; i++) {
-                    console.log("opportunites cards one", opportunitiesCard[i])
                     opportunitiesCard[i].addEventListener("click", (ev) => {
                         // findMobileNumberOfOpportunitiesUser()
                         addBtnToMakeCallThroughAlohaa()
