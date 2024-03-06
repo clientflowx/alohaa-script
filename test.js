@@ -272,7 +272,7 @@ function triggerEveryThing() {
                 // handle the data from the successful response
                 console.log("calldata", data);
                 if (data?.success)
-                    window.alert("Call Connected...")
+                    window.alert("Call Initiated...")
                 else window.alert("Some Error Occurred")
             } catch (error) {
                 // handle any errors during the request
