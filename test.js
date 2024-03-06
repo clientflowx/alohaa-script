@@ -470,7 +470,7 @@ function triggerEveryThing() {
 
             const data = await response.json();
             // handle the data from the successful response
-            window.alert("Call Connected...")
+            window.alert("Call Initiated...")
             console.log("calldata", data);
         } catch (error) {
             // handle any errors during the request
