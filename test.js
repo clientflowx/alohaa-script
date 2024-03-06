@@ -4,11 +4,11 @@ console.log("script to inject alohaa logic initiated");
 let isAllocaBtnInserted = false;
 let handleConversationItemClickTimerId = "";
 let allohaManageComponentInserted = false;
-const backendEndPointUrl = "https://test1-production-00cc.up.railway.app";
+const backendEndPointUrl = "https://cfx-mono-production.up.railway.app";
 // const backendEndPointUrl = "http://localhost:8001";
 
 const checkForValidUserFromCache = () => {
-    console.log("Fetching Alloha list from cache");
+    console.log("Fetching Alloha list from cache",window.allohaList.includes(window.locationUserId));
     return window.allohaList.includes(window.locationUserId);
 };
 
@@ -70,7 +70,7 @@ setTimeout(async () => {
     } else {
         console.log("No access, sitting silent");
     }
-}, 1000);
+}, 2000);
 
 // find email of current user
 // add listener on settings btn -> add listener on integration btn
@@ -171,7 +171,7 @@ function triggerEveryThing() {
                 const manageAlohaaTab = document.createElement("div");
                 manageAlohaaTab.classList.add('col-12');
                 manageAlohaaTab.id = 'manage-alohaa-tab'
-                manageAlohaaTab.innerHTML = `<iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:350px;" />`
+                manageAlohaaTab.innerHTML = `<iframe id="allohaStats" src="https://integration-cfx.netlify.app/highlevel/alohaa?locationId=${window.locationUserId}" style="width:450px;height:450px;" />`
                 inner.appendChild(manageAlohaaTab);
                 allohaManageComponentInserted = true;
                 // clearInterval(insertManageAllohaTabTimer);
@@ -208,52 +208,40 @@ function triggerEveryThing() {
         }
     };
 
-    // To handle case for page reload
-    var callAllohaPageDesiredUrlPattern =
-        /https:\/\/app\.clientflowx\.com\/v2\/location\/[A-Za-z0-9]+\/conversations\/conversations\/[A-Za-z0-9]+/;
 
-    // Check if the current URL matches the desired URL pattern
-    if (callAllohaPageDesiredUrlPattern.test(window.location.href)) {
-        // Your code to run when the URLs match
-        console.log("URL matches the pattern for call");
-        insertAllohaCallBtn();
+    // Insert Alohaa Call Btn Section ================================================================================================================
+    // ===============================================================================================================================================
+    const addEventListenerToConversationItemsClick = () => {
+        const timerId = setInterval(() => {
+            const conversationList = document.querySelector("#conversation-list")
+            if (conversationList) {
+                conversationList.addEventListener("click", () => {
+                    insertAllohaCallBtn();
+                })
+                clearInterval(timerId)
+            }
+        }, 1000)
     }
 
-    const manageConversationBtnClick = () => {
-        const converseTimerId = setInterval(() => {
-            // Add event listener after each 5 seconds
-            const msgBtn = document.getElementById("sb_conversations");
 
-            if (msgBtn) {
-                console.log("msgbtn", msgBtn);
-                msgBtn.addEventListener("click", () => {
-                    console.log(
-                        "window.locationUserId",
-                        window.locationUserId,
-                        window.location.href
-                    );
-                    // if (window.locationUserId === "FQ2QW4FaaR2EA12eaHnC") {
-                    console.log("found inside msg====");
-                    // if (!isAllocaBtnInserted) {
+    const addEventListenerToConversationSectionTopBar = () => {
+        const timerId = setInterval(() => {
+            const conversationNavItem = document.querySelector("#conversations > div > div.hl_conversations--messages-list-v2.relative.border-r.border-gray-200 > div > div:nth-child(1) > div > nav")
+            if (conversationNavItem) {
+                conversationNavItem.addEventListener("click", () => {
                     insertAllohaCallBtn();
-                    // attach listener on chat list item to get email
-                    // attachListenerToListItemClick();
-                    // }
-                    // }
-                });
-                clearInterval(converseTimerId);
+                })
+                clearInterval(timerId)
             }
-        }, 5000);
-    };
+        }, 1000)
+    }
 
-    // call fn to add event listener on conversation btn
-    manageConversationBtnClick();
 
     function addEventListenerToAllohaCallBtn() {
         const allohaCallBtn = document.querySelector(".alloha-call-btn");
         allohaCallBtn.addEventListener("click", async () => {
             if (!findMobileNumberOfCurrentUser()) {
-                return;
+                return null;
             }
             const payload = {
                 // didNumber: '918069738302',
@@ -283,6 +271,9 @@ function triggerEveryThing() {
                 const data = await response.json();
                 // handle the data from the successful response
                 console.log("calldata", data);
+                if (data?.success)
+                    window.alert("Call Connected...")
+                else window.alert("Some Error Occurred")
             } catch (error) {
                 // handle any errors during the request
                 console.error("Error:", error.message);
@@ -293,29 +284,31 @@ function triggerEveryThing() {
     function insertAllohaCallBtn() {
         // Find the existing div with class 'message-header-actions' every 5 seconds
         const timeId = setInterval(() => {
-            const existingDiv = document.querySelector(".message-header-actions");
-            console.log("div===", existingDiv);
-
+            const existingDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\]")
             if (existingDiv) {
                 // Find the child div with class 'button-group'
-                const buttonGroupDiv = existingDiv.querySelector(".button-group");
+                const buttonGroupDiv = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\] > div")
                 // check if alohaa call btn is already inserted
                 const isAlohaaCallBtnAlreadyInserted = document.getElementById("alohaa-make-call-btn");
                 if (buttonGroupDiv) {
                     // if alohaa already inserted
                     clearInterval(timeId);
                     if (isAlohaaCallBtnAlreadyInserted) {
-                        addEventListenerToAllohaCallBtn();
                         // Use clearInterval instead of clearTimeout
                         return;
                     }
+                    // hide twillio btn in profile tab
+                    const twilllioBtnToHide = document.querySelector("#new-crp--contacts > div.flex.flex-col.items-center.pt-\\[24px\\] > div.w-full.pl-\\[19px\\].pr-\\[17px\\].py-\\[8px\\] > div > div:nth-child(1)")
+                    if (twilllioBtnToHide) {
+                        twilllioBtnToHide.style.display = "none";
+                    }
                     // Get the second button in the button group
-                    const secondButton = document.querySelector(
-                        ".button-group button:nth-child(1)"
-                    );
-                    console.log("second btn====", secondButton);
-                    // Remove the rounded-l-md class
-                    secondButton.classList.remove("rounded-l-md");
+                    // const secondButton = document.querySelector(
+                    //     ".button-group button:nth-child(1)"
+                    // );
+                    // console.log("second btn====", secondButton);
+                    // // Remove the rounded-l-md class
+                    // secondButton.classList.remove("rounded-l-md");
 
                     // Create a new button
                     const newButton = document.createElement("button");
@@ -324,20 +317,21 @@ function triggerEveryThing() {
                     newButton.classList.add(
                         "alloha-call-btn",
                         "flex",
-                        "inline-flex",
                         "items-center",
-                        "px-2.5",
-                        "py-1",
-                        "border",
-                        "border-gray-300",
-                        "rounded-l-md"
+                        "h-[24px]",
+                        "new-crp--contacts--transition",
+                        "justify-center",
+                        "w-[26px]",
+                        "rounded-full",
+                        "bg-gray-200",
+                        "cursor-pointer"
                     );
-                    newButton.style.paddingLeft = "15px";
+                    // newButton.style.paddingLeft = "15px";
                     // newButton.style.background = "gray";
 
                     // Set button content
                     newButton.innerHTML =
-                        '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:20px;"/></span>'; // You can customize the text
+                        '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" class="h-[14px] w-[14px] new-crp--contacts--transition" /></span>'; // You can customize the text
 
                     // Insert the new button as the first child inside the 'button-group' div
                     buttonGroupDiv.insertBefore(newButton, buttonGroupDiv.firstChild);
@@ -345,88 +339,80 @@ function triggerEveryThing() {
                     addEventListenerToAllohaCallBtn();
                 }
             }
-        }, 5000);
+        }, 200);
     }
 
-    // phase 2 changes start =====================================
-    const viewAlohaaRecordsBtnsEventHandler = () => {
-        const viewAlohaaBtn = document.getElementById("view-alohaa-btn");
-        viewAlohaaBtn.addEventListener("click", () => {
-            const toFind = document.getElementById("default-modal");
-            if (toFind) {
-                if (Array.from(toFind.classList).includes("hidden")) {
-                    viewAlohaaBtn.innerText = "Hide Alohaa Records";
-                    toFind.className =
-                        "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-                } else {
-                    viewAlohaaBtn.innerText = "View Alohaa Records";
-                    toFind.className =
-                        "hidden overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-                }
-            } else {
-                const insertBeforeElement = document.querySelector(
-                    "#call-reporting-dashboard > div > div > div.w-vw.z-10.sticky.top-0.py-2\\.5.-mx-8.-mt-4.bg-gray-50"
-                );
-                const parentElement = document.querySelector(
-                    "#call-reporting-dashboard > div > div"
-                );
 
-                const callReportingModal = document.createElement("div");
+    const manageConversationBtnClick = () => {
+        const converseTimerId = setInterval(() => {
+            // Add event listener after each 5 seconds
+            const msgBtn = document.getElementById("sb_conversations");
 
-                callReportingModal.className =
-                    "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-                callReportingModal.setAttribute("id", "default-modal");
-                callReportingModal.setAttribute("tabindex", "-1");
-                callReportingModal.setAttribute("aria-hidden", "true");
-                callReportingModal.innerHTML = `<iframe
-            src="https://integration-cfx.netlify.app/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
-            class="w-full h-screen mb-6"
-          ></iframe>`;
-                callReportingModal.className =
-                    "overflow-x-hidden z-50 justify-center items-center w-full md:inset-0";
-                viewAlohaaBtn.innerText = "Hide Alohaa Records";
-                parentElement.insertBefore(callReportingModal, insertBeforeElement);
+            if (msgBtn) {
+                console.log("msgbtn", msgBtn);
+                msgBtn.addEventListener("click", () => {
+                    console.log(
+                        "window.locationUserId",
+                        window.locationUserId,
+                        window.location.href
+                    );
+                    console.log("found inside msg====");
+                    insertAllohaCallBtn();
+
+                    // attach listener on chat list item to get email
+                    addEventListenerToConversationItemsClick()
+                    addEventListenerToConversationSectionTopBar()
+
+                });
+                clearInterval(converseTimerId);
             }
-        });
+        }, 5000);
     };
-    const attachBtnToCallReportingTab = () => {
-        const attachBtnToCallReportingTabTimer = setInterval(() => {
-            const insertDestination = document.querySelector(
-                "#call-reporting-dashboard > div > div > div.hl-header > div > div:nth-child(2)"
-            );
-            const viewAlohaaBtn = document.getElementById("view-alohaa-btn");
 
-            console.log("insertDestination", insertDestination);
-            if (insertDestination) {
-                const viewAlohaaRecordsBtns = document.createElement("button");
-                viewAlohaaRecordsBtns.className =
-                    "border-2 border-black/50 hover:bg-[#6C47FF] hover:bg-blue-700 hover:border-white hover:text-white md:py-2 px-3 py-2 rounded-lg text-black";
-                viewAlohaaRecordsBtns.setAttribute(
-                    "data-modal-target",
-                    "default-modal"
-                );
-                viewAlohaaRecordsBtns.setAttribute(
-                    "data-modal-toggle",
-                    "default-modal"
-                );
-                viewAlohaaRecordsBtns.innerText = "View Alohaa Records";
-                viewAlohaaRecordsBtns.id = "view-alohaa-btn";
-                if (!viewAlohaaBtn) {
-                    insertDestination.appendChild(viewAlohaaRecordsBtns);
-                    viewAlohaaRecordsBtnsEventHandler();
-                }
-                console.log("callreporting", insertDestination);
-                clearInterval(attachBtnToCallReportingTabTimer);
+    // call fn to add event listener on conversation btn
+    manageConversationBtnClick();
+
+
+    // To handle case for page reload
+    var callAllohaPageDesiredUrlPattern =
+        /https:\/\/app\.clientflowx\.com\/v2\/location\/[A-Za-z0-9]+\/conversations\/conversations\/[A-Za-z0-9]+/;
+
+    // Check if the current URL matches the desired URL pattern
+    if (callAllohaPageDesiredUrlPattern.test(window.location.href)) {
+        // Your code to run when the URLs match
+        console.log("URL matches the pattern for call");
+        insertAllohaCallBtn();
+        addEventListenerToConversationItemsClick();
+        addEventListenerToConversationSectionTopBar();
+    }
+
+
+    // phase 2 changes start =====================================
+
+    const insertCallReportingTabForAlloha = () => {
+        const insertCallInfoBtnForAllohaTimerId = setInterval(() => {
+            // attachEventListenerToCallInfoAllohaBtn();
+            const callReportingDashboard = document.querySelector(
+                "#call-reporting-dashboard"
+            );
+            if (callReportingDashboard) {
+                callReportingDashboard.innerHTML = `<iframe
+                src="https://integration-cfx.netlify.app/highlevel/alohaa/call-info?locationId=${window.locationUserId}" 
+                class="w-full h-screen mb-6"
+              ></iframe>`;
+                clearInterval(insertCallInfoBtnForAllohaTimerId);
             }
         }, 100);
     };
+
     const attachEventListenerToCallReportingTab = () => {
         console.log("attachEventListener");
         const attachEventListenerToCallReportingTabTimer = setInterval(() => {
             const callReportingBtn = document.querySelector("#tb_call-reporting");
             if (callReportingBtn) {
                 callReportingBtn.addEventListener("click", () => {
-                    attachBtnToCallReportingTab();
+                    // attachBtnToCallReportingTab();
+                    insertCallReportingTabForAlloha()
                 });
                 clearInterval(attachEventListenerToCallReportingTabTimer);
             }
@@ -445,43 +431,6 @@ function triggerEveryThing() {
         }, 100);
     };
     attachEventListenerToReportingBtn();
-
-    // const attachEventListenerToCallInfoAllohaBtn = () => {
-    //     const attachEventListenerToCallInfoAllohaBtnTimerId = setInterval(() => {
-    //         const callInfoDetailBtn = document.querySelector(".callInfoAllohaBtn")
-    //         const callReportingDashboard = document.querySelector("#call-reporting-dashboard")
-    //         if (callInfoDetailBtn && callReportingDashboard) {
-    //             console.log("callinfodetail", callInfoDetailBtn);
-    //             callInfoDetailBtn.addEventListener("click", () => {
-    //                 console.log("callReporting", callReportingDashboard);
-    //                 callReportingDashboard.innerHTML = `<iframe src="http://localhost:3000/highlevel/alloha/call-info?locationId=${window.locationUserId}" style="width:80vw;height:78vh"></iframe>`
-    //             })
-    //         }
-    //         clearInterval(attachEventListenerToCallInfoAllohaBtnTimerId)
-    //     }, 100)
-    // }
-
-    // insert call info tab for alloha
-    // const insertCallInfoTabForAlloha = () => {
-    //     const insertCallInfoTabForAllohaTimerId = setInterval(() => {
-    //         const topBar = document.querySelector("#app > div:nth-child(1) > div.flex.v2-open.sidebar-v2-location.FQ2QW4FaaR2EA12eaHnC.flex.v2-open.sidebar-v2-location > div:nth-child(2) > header > div.flex.flex-row.justify-start.items-center.topmenu-nav")
-    //         if (topBar) {
-    //             console.log("topbarfound", topBar)
-    //             const customBtn = `<button class="callInfoAllohaBtn group text-left mx-1 pb-2 md:pb-3 text-sm font-medium
-    //             topmenu-navitem cursor-pointer relative px-2">Alloha Call Details</button>`;
-
-    //             // Create a temporary div element
-    //             const tempDiv = document.createElement('div');
-    //             tempDiv.innerHTML = customBtn;
-
-    //             // Append the first child of the temporary div (the button) to the topBar
-    //             topBar.appendChild(tempDiv.firstChild);
-
-    //             attachEventListenerToCallInfoAllohaBtn();
-    //             clearInterval(insertCallInfoTabForAllohaTimerId);
-    //         }
-    //     }, 100)
-    // }
 
 
     // oppurtunities section
@@ -521,6 +470,7 @@ function triggerEveryThing() {
 
             const data = await response.json();
             // handle the data from the successful response
+            window.alert("Call Connected...")
             console.log("calldata", data);
         } catch (error) {
             // handle any errors during the request
@@ -549,7 +499,14 @@ function triggerEveryThing() {
     const addBtnToMakeCallThroughAlohaa = () => {
         const addBtnToMakeCallThroughAlohaaTimerId = setInterval(() => {
             const opportunitiesCardMobileNumberField = document.querySelector("#opportunitiesForm > div:nth-child(2) > div > div.n-form-item-blank");
+            const isAlohaaCallBtnAlreadyInserted = document.getElementById("alohaa-make-call-opportunities-btn")
             if (opportunitiesCardMobileNumberField) {
+                if (isAlohaaCallBtnAlreadyInserted) {
+                    clearInterval(addBtnToMakeCallThroughAlohaaTimerId);
+                    return;
+                }
+                opportunitiesCardMobileNumberField.classList.remove('n-form-item-blank')
+                opportunitiesCardMobileNumberField.classList.add('flex','items-center')
                 const newButton = document.createElement("button");
                 newButton.id = "alohaa-make-call-opportunities-btn"
                 newButton.setAttribute("type", "button");
@@ -565,7 +522,7 @@ function triggerEveryThing() {
 
                 // Set button content
                 newButton.innerHTML =
-                    '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:30px;"/></span>'; // You can customize the text
+                    '<span><img src="https://res.cloudinary.com/dtqzhg98l/image/upload/v1705251766/Alohaa_orqfaa.png" style="height:25px;"/></span>'; // You can customize the text
                 opportunitiesCardMobileNumberField.appendChild(newButton);
                 attachEventListenerToMakeCallBtnInOpportunitiesCard();
                 clearInterval(addBtnToMakeCallThroughAlohaaTimerId);
@@ -577,10 +534,8 @@ function triggerEveryThing() {
     const attachEventListenerToOpportunitiesCards = () => {
         const attachEventListenerToOpportunitiesCardsTimerId = setInterval(() => {
             const opportunitiesCard = document.getElementsByClassName("opportunitiesCard borderColor mb-2 hl-card")
-            console.log("opportunites cards", opportunitiesCard)
             if (opportunitiesCard.length > 0) {
                 for (let i = 0; i < opportunitiesCard.length; i++) {
-                    console.log("opportunites cards one", opportunitiesCard[i])
                     opportunitiesCard[i].addEventListener("click", (ev) => {
                         // findMobileNumberOfOpportunitiesUser()
                         addBtnToMakeCallThroughAlohaa()
@@ -607,19 +562,7 @@ function triggerEveryThing() {
     // called on load
     attachEventListenerToOpportunitiesTab()
 
-    // call info alloha btn
-    const insertCallInfoBtnForAlloha = () => {
-        const insertCallInfoBtnForAllohaTimerId = setInterval(() => {
-            // attachEventListenerToCallInfoAllohaBtn();
-            const callReportingDashboard = document.querySelector(
-                "#call-reporting-dashboard"
-            );
-            if (callReportingDashboard) {
-                callReportingDashboard.innerHTML = `<iframe src="https://integration-cfx.netlify.app/highlevel/alohaa/call-info?locationId=${window.locationUserId}" style="width:80vw;height:78vh"></iframe>`;
-                clearInterval(insertCallInfoBtnForAllohaTimerId);
-            }
-        }, 100);
-    };
+
 
     // call info alloha page desired url pattern
     const callInfoAllohaPageDesiredUrlPattern =
@@ -630,7 +573,7 @@ function triggerEveryThing() {
         // Your code to run when the URLs match
         console.log("URL matches the pattern for call info");
         // insertCallInfoTabForAlloha();
-        insertCallInfoBtnForAlloha();
+        insertCallReportingTabForAlloha();
     }
 
     // phase 2 end ========================================================
@@ -639,4 +582,15 @@ function triggerEveryThing() {
         console.log("Page URL changed:", window.location.href);
         // Your code to handle URL change
     });
+
+
+    const regularCallingFn = () => {
+        setInterval(() => {
+            const alohaaBtn = document.getElementById('alohaa-make-call-btn');
+            if (!alohaaBtn) insertAllohaCallBtn();
+            addBtnToMakeCallThroughAlohaa()
+        }, 200)
+    }
+
+    regularCallingFn();
 }
