@@ -63,14 +63,15 @@ const isValidAllohaUser = async () => {
 };
 
 // Populate valid Alloha list and trigger actions
-setTimeout(async () => {
+async function initiateAllohaScript() {
     const hasAccessToAlloha = await isValidAllohaUser();
     if (hasAccessToAlloha) {
         triggerEveryThing(); // activateAllTheFn
     } else {
         console.log("No access, sitting silent");
     }
-}, 2000);
+}
+
 
 // find email of current user
 // add listener on settings btn -> add listener on integration btn
@@ -281,7 +282,7 @@ function triggerEveryThing() {
                 // handle the data from the successful response
                 console.log("calldata", data);
                 if (data?.success) { window.alert("Call Initiated...") }
-                else window.alert("Some Error Occurred,Plz Check If Mobile Number is Valid and starts with +91")
+                else window.alert("Some Error Occurred")
             } catch (error) {
                 // handle any errors during the request
                 console.error("Error:", error.message);
@@ -622,3 +623,7 @@ function triggerEveryThing() {
 
     regularCallingFn();
 }
+
+
+// initial script
+initiateAllohaScript()
