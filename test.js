@@ -8,7 +8,7 @@ const backendEndPointUrl = "https://cfx-mono-production.up.railway.app";
 // const backendEndPointUrl = "http://localhost:8001";
 
 const checkForValidUserFromCache = () => {
-    console.log("Fetching Alloha list from cache",window.allohaList.includes(window.locationUserId));
+    console.log("Fetching Alloha list from cache", window.allohaList.includes(window.locationUserId));
     return window.allohaList.includes(window.locationUserId);
 };
 
@@ -196,10 +196,19 @@ function triggerEveryThing() {
         )[0]?.innerHTML;
         console.log("mobile===", mobileNumberOfUser);
         if (mobileNumberOfUser) {
+            if (!mobileNumberOfUser?.startsWith('+91')) {
+                window.alert("Mobile Number Should Start with +91")
+                return false;
+            }
             const formattedNumber = mobileNumberOfUser
                 .replace(/^(\+91\s*)/g, "")
                 .replace(/\s/g, "");
+            if (formattedNumber?.length !== 10) {
+                window.alert("Mobile Number Not Correct")
+                return false;
+            }
             window.currentUserMobie = formattedNumber;
+
             // clearInterval(mobileNumerTimer);
             return true;
         } else {
@@ -271,9 +280,8 @@ function triggerEveryThing() {
                 const data = await response.json();
                 // handle the data from the successful response
                 console.log("calldata", data);
-                if (data?.success)
-                    window.alert("Call Initiated...")
-                else window.alert("Some Error Occurred")
+                if (data?.success) { window.alert("Call Initiated...") }
+                else window.alert("Some Error Occurred,Plz Check If Mobile Number is Valid and starts with +91")
             } catch (error) {
                 // handle any errors during the request
                 console.error("Error:", error.message);
@@ -440,9 +448,24 @@ function triggerEveryThing() {
             window.alert("Mobile Number Not Found")
             return;
         }
+
+        if (!mobileNumberOfReceiver?.startsWith('+91')) {
+            window.alert("Mobile Number Should Start with +91")
+            return false;
+        }
         const formattedReceiverNumber = mobileNumberOfReceiver
             .replace(/^(\+91\s*)/g, "")
             .replace(/\s/g, "");
+
+        if (formattedReceiverNumber?.length !== 10) {
+            window.alert("Mobile Number Not Correct")
+            return false;
+        }
+
+        // const formattedReceiverNumber = mobileNumberOfReceiver
+        //     .replace(/^(\+91\s*)/g, "")
+        //     .replace(/\s/g, "");
+
         const payload = {
             // didNumber: '918069738302',
             // callerNumber: '8882375101',
@@ -506,7 +529,7 @@ function triggerEveryThing() {
                     return;
                 }
                 opportunitiesCardMobileNumberField.classList.remove('n-form-item-blank')
-                opportunitiesCardMobileNumberField.classList.add('flex','items-center')
+                opportunitiesCardMobileNumberField.classList.add('flex', 'items-center')
                 const newButton = document.createElement("button");
                 newButton.id = "alohaa-make-call-opportunities-btn"
                 newButton.setAttribute("type", "button");
@@ -589,6 +612,11 @@ function triggerEveryThing() {
             const alohaaBtn = document.getElementById('alohaa-make-call-btn');
             if (!alohaaBtn) insertAllohaCallBtn();
             addBtnToMakeCallThroughAlohaa()
+            if (manageAllohaPageDesiredUrlPattern.test(window.location.href)) {
+                // Your code to run when the URLs match
+                console.log("URL matches the pattern for manage");
+                insertManageAllohaTab();
+            }
         }, 200)
     }
 
